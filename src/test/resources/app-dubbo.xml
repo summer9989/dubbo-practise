@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+>
+
+    <dubbo:consumer version="1.0.0" loadbalance="${dubbo.consumer.loadbalance}"
+                    timeout="${dubbo.consumer.timeout}"/>
+
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="app-${app.name}" owner="xiaqiang"/>
+
+    <!-- 使用zookeeper注册中心暴露发现服务地址 -->
+    <dubbo:registry protocol="${dubbo.registry.protocol}" address="${ZKSTRING}"
+                    file="${user.home}/.dubbo/dubbo-registry-app-${app.name}.cache"
+                    timeout="21500"/>
+
+    <dubbo:reference id="pushInnerFacade" interface="yunnex.push.facade.PushInnerFacade" stub="org.xplatform.dubbo.consumer.stub.PushInnerFacadeStub"
+                     url="dubbo://127.0.0.1:1460"/>
+</beans>
